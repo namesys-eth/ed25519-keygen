@@ -2,11 +2,15 @@ import { ed25519 } from '@noble/curves/ed25519';
 import { hex, base32, utils } from '@scure/base';
 import { concatBytes } from 'micro-packed';
 
-const base36 = utils.chain(utils.radix(36), utils.alphabet('0123456789abcdefghijklmnopqrstuvwxyz'), utils.padding(0), utils.join(''));
+const base36 = utils.chain(
+  utils.radix(36),
+  utils.alphabet('0123456789abcdefghijklmnopqrstuvwxyz'),
+  utils.padding(0),
+  utils.join('')
+);
 
 // Formats IPNS public key in bytes array format to 'ipns://k...' string format
 export function formatPublicKey(pubBytes: Uint8Array) {
-  // Convert bytes array → hex string → BigInt → base-36 string → IPNS
   return `ipns://k${base36.encode(pubBytes)}`;
 }
 
