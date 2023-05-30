@@ -30,7 +30,7 @@ export function parseAddress(address: string): Uint8Array {
     const b36 = '0123456789abcdefghijklmnopqrstuvwxyz';
     let result = 0n;
     // Iterate over chars in pubkey, starting from the second char
-    for (let i = 1; i < address.length; ) {
+    for (let i = 1; i < address.length;) {
       // Convert each base-36 char to BigInt
       result = result * 36n + BigInt(b36.indexOf(address.charAt(i++)));
     }
