@@ -42,11 +42,11 @@ export function parseAddress(address: string): Uint8Array {
   } else if (address.startsWith('f')) {
     // Remove 'f' prefix from pubkey
     hexKey = address.slice(1);
-  } else throw new Error('Unsupported Base-X Format'); // Throw an error if the pubkey format is not supported
+  } else throw new Error('Unsupported Base-X Format'); // Throw an error if pubkey format is not supported
 
-  // Check if the hexKey has the expected prefix '0172002408011220' and a length of 80 characters
+  // Check if hexKey has expected prefix '0172002408011220' and length of 80
   if (hexKey.startsWith('0172002408011220') && hexKey.length === 80) {
-    // Decode the hexadecimal key and return it as a Uint8Array
+    // Decode the hex key and return it as bytes array
     return hex.decode(hexKey);
   }
 
