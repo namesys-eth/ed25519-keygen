@@ -1,30 +1,25 @@
 import { ed25519 } from '@noble/curves/ed25519';
-import { hex, base32 } from '@scure/base';
+import { hex, base32, utils } from '@scure/base';
 import { concatBytes } from 'micro-packed';
+
+const base36 = utils.chain(utils.radix(36), utils.alphabet('0123456789abcdefghijklmnopqrstuvwxyz'), utils.padding(0), utils.join(''));
 
 // Formats IPNS public key in bytes array format to 'ipns://k...' string format
 export function formatPublicKey(pubBytes: Uint8Array) {
   // Convert bytes array → hex string → BigInt → base-36 string → IPNS
-  return `ipns://k${BigInt(`0x${hex.encode(pubBytes)}`).toString(36)}`;
+  return `ipns://k${base36.encode(pubBytes)}`;
 }
 
 // Takes an IPNS pubkey (address) string as input and returns bytes array of the key
 // Supports various formats ('ipns://k', 'ipns://b', 'ipns://f')
 // Handles decoding and validation of the key before returning pubkey bytes
 export function parseAddress(address: string): Uint8Array {
-  if (address.startsWith('ipns://')) address = address.slice(7);
   address = address.toLowerCase();
+  if (address.startsWith('ipns://')) address = address.slice(7);
   let hexKey;
   if (address.startsWith('k')) {
-    const b36 = '0123456789abcdefghijklmnopqrstuvwxyz';
-    let result = 0n;
-    // Iterate over chars in pubkey and convert to BigInt
-    for (let i = 1; i < address.length; ) {
-      // start at second char
-      result = result * 36n + BigInt(b36.indexOf(address.charAt(i++)));
-    }
-    // Convert BigInt to hex format and pad it with zeros up to length 80
-    hexKey = result.toString(16).padStart(80, '0');
+    // Decode base-36 pubkey (after removing 'k' prefix) and encode it as a hex string
+    hexKey = hex.encode(base36.decode(address.slice(1)));
   } else if (address.startsWith('b')) {
     // Decode base-32 pubkey (after removing 'b' prefix) and encode it as a hex string
     hexKey = hex.encode(base32.decode(address.slice(1).toUpperCase()));
