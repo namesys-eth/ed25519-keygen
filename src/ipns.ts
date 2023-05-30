@@ -2,9 +2,6 @@ import { ed25519 } from '@noble/curves/ed25519';
 import { hex, base32 } from '@scure/base';
 import { concatBytes } from 'micro-packed';
 
-const ADDRESS_VERSION = new Uint8Array([0x03]);
-//const NAMESPACE = new Uint8Array([0xe5]);
-
 // Formats IPNS public key in bytes array format to 'ipns://k...' string format
 export function formatPublicKey(pubBytes: Uint8Array) {
   // Convert bytes array → hex string → BigInt → base-36 string → IPNS
